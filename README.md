@@ -12,7 +12,7 @@ A small blog application made in Laravel with Bootsrap, and JQuery, using CKEdit
 ## 2. Installing frontend dependencies and compiling them
 
 - Install: ```npm install```
-- Compile: ```npm run dev``
+- Compile: ```npm run dev```
 
 ## 3. Setting up database
 
