@@ -11,8 +11,12 @@ Route::get('/',[HomeController::class,'index'])
     ->name('index');
 
 Route::group(['prefix'=>'posts/photo','middleware'=> ['auth','role:'.RoleConstants::ROLE_ADMIN.",".RoleConstants::ROLE_CONTENT_CREATOR]],function (){
-    Route::post('upload',[PostsController::class,'storePhoto'])->name('posts.upload-photo');
-    Route::delete('delete',[PostsController::class,'deletePhoto'])->name('posts.delete-photo');
+    Route::post('upload',[PostsController::class,'storePhoto'])
+        ->name('posts.upload-photo');
+    Route::post('upload-ckeditor',[PostsController::class,'uploadCkEditorImage'])
+        ->name('posts.upload-ckeditor');
+    Route::delete('delete',[PostsController::class,'deletePhoto'])
+        ->name('posts.delete-photo');
 });
 
 Route::group(['prefix'=>'admin', 'middleware'=> ['auth']], function(){

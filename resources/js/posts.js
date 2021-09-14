@@ -1,14 +1,13 @@
 let Posts = {
-
     taContent: null,
     fileInput: null,
     photoInfos: {},
+    uploadCkEditorUrl:null,
     $form: null,
 
     init: function(params){
-        if(params) {
-            this.photoInfos = params.photoInfos;
-        }
+        this.photoInfos = params.photoInfos?params.photoInfos:{};
+        this.uploadCkEditorUrl = params.ckeditorUploadUrl?params.ckeditorUploadUrl:null;
         this.taContent = document.querySelector("#content");
         this.fileInput = document.querySelector('.dropzone');
         this.$form = document.querySelector('form');
@@ -17,7 +16,14 @@ let Posts = {
     },
 
     bindCKEditor: function (){
-        ClassicEditor.create(this.taContent);
+        ClassicEditor.create(this.taContent,{
+            mediaEmbed:{
+              previewsInData: true,
+            },
+            ckfinder:{
+                uploadUrl: this.uploadCkEditorUrl+'?_token='+$('meta[name="csrf-token"]').attr('content'),
+            }
+        });
     },
 
     bindDropZone: function (){
@@ -28,8 +34,6 @@ let Posts = {
         let self = this;
 
         let deleteUrl = this.fileInput.getAttribute('data-delete-url');
-
-        console.log(deleteUrl);
 
         let csrf = $('meta[name="csrf-token"]').attr('content');
 

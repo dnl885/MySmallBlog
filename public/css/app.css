@@ -5203,7 +5203,8 @@ button.toast-close-button {
 }
 
 html{
-    min-height: 100%;
+    min-height: 100%!important;
+    height: 0!important;
 }
 
 .blog-header {

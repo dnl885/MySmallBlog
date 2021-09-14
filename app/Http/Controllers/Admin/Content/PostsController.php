@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Blog\CreatePostRequest;
 use App\Models\Photo;
 use App\Models\Post;
+use App\Services\ImageUploadService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,6 +17,14 @@ use Illuminate\Support\Facades\File;
 
 class PostsController extends Controller
 {
+    private ImageUploadService $imageUploadService;
+
+
+    public function __construct(ImageUploadService $imageUploadService)
+    {
+        $this->imageUploadService = $imageUploadService;
+    }
+
     public function index():View
     {
         $this->authorize('view',Post::class);
@@ -62,20 +71,27 @@ class PostsController extends Controller
     }
 
     public function storePhoto(Request $request){
-        $path = '';
-
         $request->validate([
             'file'=>'image|max:3072'
         ]);
 
-        if($file =$request->file('file'))
-        {
-            $filename = uniqid('p_', true).'.'.$file->guessExtension();
-
-            $path = $file->storeAs('photos',$filename,'public_uploads');
-        }
+        $path = $this->imageUploadService->uploadImage($request->file('file'),'photos');
 
         return response()->json(['path'=>basename($path)]);
+    }
+
+    public function uploadCkEditorImage(Request $request){
+        $request->validate([
+            'upload'=>'image|max:1072',
+        ]);
+
+        $dir = 'editor_images';
+
+        $path = $this->imageUploadService->uploadImage($request->file('upload'),$dir);
+
+        $url = asset('uploads/'.$dir.'/'.basename($path));
+
+        return response()->json(['fileName' => basename($path), 'uploaded'=> 1, 'url' => $url]);
     }
 
     public function deletePhoto(Request $request)

@@ -1,7 +1,9 @@
 @extends('layouts.admin.app')
 
 @section('javascript_init')
-    Posts.init();
+    Posts.init({
+        ckeditorUploadUrl:'{{route('posts.upload-ckeditor')}}'
+    });
 @endsection
 
 @section('section-title')
